@@ -9,7 +9,7 @@ describe('qs', () => {
   });
 
   it('should return a string with query parameters', () => {
-    result.should.equal('?field[post]=title,sub_title&include=body');
+    result.should.equal('?field[post]=title,sub_title&include=author,body');
   });
 
   it('should include virtual key paths, if provided', () => {
@@ -20,6 +20,6 @@ describe('qs', () => {
     ];
 
     const contrived_result = qs({ config, type: 'post' });
-    contrived_result.should.equal('?field[post]=title,sub_title,contrived_attribute&include=body,contrived_relationship');
+    contrived_result.should.equal('?field[post]=title,sub_title,contrived_attribute&include=author,body,contrived_relationship');
   });
 });

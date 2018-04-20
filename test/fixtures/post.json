@@ -7,7 +7,12 @@
       "sub_title": "Or: That time I couldn’t decide between two titles."
     },
     "relationships": {
-      "author": {},
+      "author": {
+        "data": {
+          "type": "person",
+          "id": "201"
+        }
+      },
       "body": {
         "data": [{
           "type": "paragraph",
@@ -53,6 +58,33 @@
         "name": "William Ernest Henley",
         "url": "https://www.poetryfoundation.org/poems/51642/invictus",
         "description": null
+      }
+    }
+  },{
+    "type": "person",
+    "id": "201",
+    "attributes": {
+      "name": "Testy McTestface",
+      "biography": "It’s turtles all the way down, man.",
+      "path": {
+        "alias": "/authors/testy-mctestface"
+      }
+    },
+    "relationships": {
+      "topics": {
+        "data": [{
+          "type": "taxonomy",
+          "id": "301"
+        }]
+      }
+    }
+  },{
+    "type": "taxonomy",
+    "id": "301",
+    "attributes": {
+      "name": "Test-driven Development",
+      "path": {
+        "alias": "/topics/test-driven-development"
       }
     }
   }]

@@ -9,8 +9,8 @@ const map_object = require('./object');
  *
  * @todo Document this method.
  */
-function map({ config, data, included, related, links, meta }) {
-  let schema = config.schema[data.type];
+function map({ config, data, included, related, alt_schema_name, links, meta }) {
+  let schema = config.schema[alt_schema_name || data.type];
   if (!schema) {
     return data;
   }

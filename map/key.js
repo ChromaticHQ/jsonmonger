@@ -10,7 +10,7 @@ const string_pattern = /(?:attributes|links|meta|relationships)\..+/i;
  *
  * @todo Document this method.
  */
-function map_key({ config, key, value, data, related, map }) {
+function map_key({ config, key, value, data, related, map, schema }) {
   let result;
 
   // Depending on the value provided…
@@ -41,7 +41,7 @@ function map_key({ config, key, value, data, related, map }) {
   }
 
   // If the result looks like a relationship, try to map it.
-  result = attempt_to_map({ config, map, related, result });
+  result = attempt_to_map({ config, data, key, map, related, result, schema });
 
   return result;
 }
@@ -59,18 +59,21 @@ function resolve_object({ config, data, key, map, related, result, value }) {
 }
 
 /* eslint-disable complexity */
-function attempt_to_map({ config, map, related, result }) {
+function attempt_to_map({ config, key, map, related, result, schema }) {
+  // Use an alternate schema if provided.
+  const alt_schema_name = _.get(schema, `__${key}_schema`);
+
   if (result && result.data && Array.isArray(result.data)) {
     return result.data.map(item => {
       if (item.id && item.type && related[`${item.type}::${item.id}`]) {
-        return map({ config, data: related[`${item.type}::${item.id}`], related, meta: result.meta, map });
+        return map({ config, data: related[`${item.type}::${item.id}`], related, alt_schema_name, meta: result.meta, map });
       } else {
         return item;
       }
     });
   } else if (result && result.data && result.data.id && result.data.type
     && related[`${result.data.type}::${result.data.id}`]) {
-    return map({ config, data: related[`${result.data.type}::${result.data.id}`], related, meta: result.meta, map });
+    return map({ config, data: related[`${result.data.type}::${result.data.id}`], related, alt_schema_name, meta: result.meta, map });
   } else {
     return result;
   }

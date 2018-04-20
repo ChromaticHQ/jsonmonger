@@ -24,7 +24,7 @@ function map_object({ config, schema, parentKey, data, related, map }) {
     if (typeof schema[key] === 'function') {
       result.__virtuals.push(key);
     } else {
-      result[key] = map_key({ config, value: schema[key], key, data, related, map });
+      result[key] = map_key({ config, value: schema[key], key, data, related, map, schema });
     }
   });
 
@@ -33,7 +33,7 @@ function map_object({ config, schema, parentKey, data, related, map }) {
     const tmp_result = schema[key]({ result, data, related });
 
     if (typeof tmp_result === 'string') {
-      result[key] = map_key({ config, value: tmp_result, key, data, related, map });
+      result[key] = map_key({ config, value: tmp_result, key, data, related, map, schema });
     } else {
       result[key] = tmp_result;
     }

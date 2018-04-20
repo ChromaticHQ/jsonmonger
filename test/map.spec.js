@@ -16,6 +16,7 @@ describe('map', () => {
     result.title.should.equal(raw_post.data.attributes.title);
     result.meta.subtitle.should.equal(raw_post.data.attributes.sub_title);
     result.body.should.have.length(4);
+    result.author.should.be.instanceOf(Object);
   });
 
   it('should use schemas to map related objects', () => {
@@ -44,6 +45,21 @@ describe('map', () => {
         },
       },
     }]);
+
+    const author = result.author;
+
+    author.should.be.instanceOf(Object);
+    author.should.deepEqual({
+      type: 'person',
+      name: included[4].attributes.name,
+      bio: included[4].attributes.biography,
+      url: included[4].attributes.path.alias,
+      topics: [{
+        type: 'topic',
+        label: included[5].attributes.name,
+        url: included[5].attributes.path.alias,
+      }],
+    });
   });
 
   it('should use related objects as-is when no schema is available for them', () => {
@@ -68,8 +84,21 @@ describe('map', () => {
 
     const amended_result = map(Object.assign({ config }, amended_post));
     const body = amended_result.body;
+    const included = amended_post.included;
 
-    body[4].should.deepEqual(amended_post.included[4]);
+    body[4].should.deepEqual(included[included.length - 1]);
+  });
+
+  it('should use an alternate schema, if provided', () => {
+    const alt_config = _.cloneDeep(config);
+    _.set(alt_config, 'schema.post.__author_schema', 'person_sparse');
+    const alt_result = map(Object.assign({ config: alt_config }, raw_post));
+
+    alt_result.author.should.deepEqual({
+      type: 'person',
+      name: raw_post.included[4].attributes.name,
+      url: raw_post.included[4].attributes.path.alias,
+    });
   });
 
   it('should attempt to fetch missing related objects');
