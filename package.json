@@ -1,6 +1,6 @@
 {
   "name": "jsonmonger",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "A jsonapi-compliant abstraction layer for your JavaScript applications.",
   "main": "index.js",
   "scripts": {
