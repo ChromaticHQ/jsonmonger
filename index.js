@@ -1,5 +1,7 @@
 module.exports = Jsonapi;
 
+const _ = require('lodash');
+
 /**
  * Construct Jsonapi utility object.
  * @constructor
@@ -10,20 +12,7 @@ module.exports = Jsonapi;
  */
 function Jsonapi(config) {
   // @todo Do some config validation, probably.
-  return {
-    __config: config,
-
-    // Create setter function that throws an error when attempting to set a new
-    // Jsonapi config.
-    set config(param) {
-      throw new Error('Mapper: cannot set config after construction.');
-    },
-
-    // Create getter function that returns the Jsonapi config.
-    get config() {
-      return this.__config;
-    },
-  }
+  this.config =_.cloneDeep(config);
 }
 
 [ 'get', 'map', 'qs' ].forEach(method => {
