@@ -1,0 +1,38 @@
+{
+  "name": "jsonmonger",
+  "version": "0.1.0",
+  "description": "A jsonapi-compliant abstraction layer for your JavaScript applications.",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha",
+    "lint": "eslint --config .eslintrc.yaml --ignore-path .eslintignore ./"
+  },
+  "author": "Alfonso Gómez-Arzola <alfonso@chromatichq.com>",
+  "license": "MIT",
+  "dependencies": {
+    "lodash": "^4.17.5",
+    "request": "^2.85.0"
+  },
+  "devDependencies": {
+    "eslint": "^4.19.1",
+    "mocha": "^5.1.1",
+    "should": "^13.2.1",
+    "sinon": "^4.5.0"
+  },
+  "directories": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/agarzola/jsonmonger.git"
+  },
+  "keywords": [
+    "json",
+    "jsonapi",
+    "mapping"
+  ],
+  "bugs": {
+    "url": "https://github.com/agarzola/jsonmonger/issues"
+  },
+  "homepage": "https://github.com/agarzola/jsonmonger#readme"
+}

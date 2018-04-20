@@ -1,0 +1,59 @@
+{
+  "data": {
+    "type": "post",
+    "id": "1",
+    "attributes": {
+      "title": "Your run of the mill post.",
+      "sub_title": "Or: That time I couldn’t decide between two titles."
+    },
+    "relationships": {
+      "author": {},
+      "body": {
+        "data": [{
+          "type": "paragraph",
+          "id": "101"
+        },{
+          "type": "image",
+          "id": "102"
+        },{
+          "type": "paragraph",
+          "id": "103"
+        },{
+          "type": "blockquote",
+          "id": "104"
+        }]
+      }
+    }
+  },
+  "included": [{
+    "type": "paragraph",
+    "id": "101",
+    "attributes": {
+      "text": "Et id animi optio voluptatem sunt voluptas dolorem. Et neque quasi aliquid quia soluta enim quia deserunt. Eum fugit est non accusamus ut nisi recusandae veniam. Quia vero excepturi minima. Et reiciendis voluptas error vel rerum omnis ipsum quia."
+    }
+  },{
+    "type": "image",
+    "id": "102",
+    "attributes": {
+      "src": "/path/to/image.jpg",
+      "alt": "You do provide ALT values, right?"
+    }
+  },{
+    "type": "paragraph",
+    "id": "103",
+    "attributes": {
+      "text": "Quia sed repellat id cum. Aperiam reprehenderit amet minima ut dolorem non nostrum placeat. Culpa esse id dolorum ducimus. Est quae nemo et rerum sapiente nam inventore."
+    }
+  },{
+    "type": "blockquote",
+    "id": "104",
+    "attributes": {
+      "text": "It matters not how strait the gate, how charged with punishments the scroll, I am the master of my fate, I am the captain of my soul.",
+      "source": {
+        "name": "William Ernest Henley",
+        "url": "https://www.poetryfoundation.org/poems/51642/invictus",
+        "description": null
+      }
+    }
+  }]
+}

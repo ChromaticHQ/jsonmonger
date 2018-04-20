@@ -1,0 +1,52 @@
+env:
+  browser: true
+  node: true
+  mocha: true
+  es6: true
+extends: eslint:recommended
+rules:
+  indent:
+    - warn
+    - 2
+    - SwitchCase: 1
+  linebreak-style:
+    - error
+    - unix
+  space-before-function-paren:
+    - error
+    - anonymous: always
+      named: never
+      asyncArrow: always
+  no-bitwise: error
+  curly:
+    - error
+    - all
+  nonblock-statement-body-position:
+    - error
+    - below
+  brace-style:
+    - error
+    - 1tbs
+  eqeqeq: warn
+  no-use-before-define:
+    - error
+    - functions: false
+  complexity:
+    - error
+    - 7
+  quotes:
+    - error
+    - single
+    - avoidEscape: true
+  comma-dangle:
+    - error
+    - always-multiline
+  no-unused-vars:
+    - error
+    - args: none
+  object-curly-spacing:
+    - error
+    - always
+  no-console: off
+  no-trailing-spaces: error
+  no-redeclare: off
