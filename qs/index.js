@@ -1,5 +1,5 @@
-const attrs_pattern = new RegExp('^attributes\..+');
-const rels_pattern = new RegExp('^relationships\..+');
+const attrs_pattern = /^attributes\./i;
+const rels_pattern = /^relationships\./i;
 
 module.exports = qs;
 
@@ -7,7 +7,7 @@ module.exports = qs;
  * Produce a JSON API request query string for a given schema.
  * @public
  *
- * @todo Finish this mess.
+ * @todo Document this mess.
  */
 function qs({ config, schema = null, type }) {
   schema = schema || config.schema[type];
@@ -21,11 +21,11 @@ function qs({ config, schema = null, type }) {
   const parameters = [];
 
   if (attributes.length) {
-    parameters += `field[${type}]=${attributes.join(',')}`;
+    parameters.push(`field[${type}]=${attributes.join(',')}`);
   }
 
   if (relationships) {
-    parameters += `include=${relationships.join(',')}`;
+    parameters.push(`include=${relationships.join(',')}`);
   }
 
   const query_string = parameters.length ? `?${parameters.join('&')}` : '';
@@ -43,16 +43,23 @@ function get_paths(schema) {
     switch (typeof schema[key]) {
       case 'string':
         if (schema[key].match(attrs_pattern)) {
-          paths.attributes.push(schema[key].replace('^attributes\.', ''));
+          paths.attributes.push(schema[key].replace(/^attributes\./i, ''));
         } else if (schema[key].match(rels_pattern)) {
-          paths.relationships.push(schema[key].replace('^relationships\.', ''));
+          paths.relationships.push(schema[key].replace(/^relationships\./i, ''));
         }
         break;
-      case 'object':
+      case 'object': {
         const { attributes, relationships } = get_paths(schema[key]);
-        paths.attributes.concat(attributes);
-        paths.relationships.concat(relationships);
+        paths.attributes.push(...attributes);
+        paths.relationships.push(...relationships);
         break;
+      }
+      case 'function': {
+        const { attributes, relationships } = get_paths(schema[key].__qs);
+        paths.attributes.push(...attributes);
+        paths.relationships.push(...relationships);
+        break;
+      }
     }
   });
 
