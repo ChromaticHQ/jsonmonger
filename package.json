@@ -16,6 +16,7 @@
   "devDependencies": {
     "eslint": "^4.19.1",
     "mocha": "^5.1.1",
+    "pre-push": "^0.1.1",
     "should": "^13.2.1",
     "sinon": "^4.5.0"
   },
@@ -34,5 +35,9 @@
   "bugs": {
     "url": "https://github.com/agarzola/jsonmonger/issues"
   },
-  "homepage": "https://github.com/agarzola/jsonmonger#readme"
+  "homepage": "https://github.com/agarzola/jsonmonger#readme",
+  "pre-push": [
+    "test",
+    "lint"
+  ]
 }
