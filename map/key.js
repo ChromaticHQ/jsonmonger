@@ -42,7 +42,7 @@ function map_key({ config, key, value, data, related, map }) {
   }
 
   // If the result looks like a relationship, try to map it.
-  result = attempt_to_map();
+  result = attempt_to_map({ config, map, related, result });
 
   return result;
 }
@@ -55,7 +55,7 @@ function resolve_object({ config, data, key, map, related, result, value }) {
     });
   } else {
     // Treat literal objects as objects.
-    return map_object({ config, schema: value, parentKey: key, data, related, map });
+    return map_object({ config, data, map, parentKey: key, schema: value, related });
   }
 }
 
@@ -72,6 +72,8 @@ function attempt_to_map({ config, map, related, result }) {
   } else if (result && result.data && result.data.id && result.data.type
     && related[`${result.data.type}::${result.data.id}`]) {
     return map({ config, data: related[`${result.data.type}::${result.data.id}`], related, meta: result.meta, map });
+  } else {
+    return result;
   }
 }
 /* eslint-enable complexity */
