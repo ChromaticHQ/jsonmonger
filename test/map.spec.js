@@ -1,10 +1,12 @@
-const should = require('should');
+require('should');
 const config = require('./config');
 const raw_post = require('./fixtures/post');
 const map = require('../map');
+const _ = require('lodash');
 
 describe('map', () => {
   let result;
+
   before(() => {
     result = map(Object.assign({ config }, raw_post));
   });
@@ -12,7 +14,7 @@ describe('map', () => {
   it('should map an object according to its schema', () => {
     result.type.should.equal('post');
     result.title.should.equal(raw_post.data.attributes.title);
-    result.meta.subtitle.should.equal(raw_post.data.attributes.subtitle);
+    result.meta.subtitle.should.equal(raw_post.data.attributes.sub_title);
     result.body.should.have.length(4);
   });
 
@@ -40,12 +42,12 @@ describe('map', () => {
           url: included[3].attributes.source.url,
           title: 'A fallback link title.',
         },
-      }
+      },
     }]);
   });
 
   it('should use related objects as-is when no schema is available for them', () => {
-    const amended_post = raw_post;
+    const amended_post = _.cloneDeep(raw_post);
 
     // Add a body object with a video reference.
     amended_post.data.relationships.body.data.push({
