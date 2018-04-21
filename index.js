@@ -15,7 +15,7 @@ function Jsonapi(config) {
   this.config =_.cloneDeep(config);
 }
 
-[ 'get', 'map', 'qs' ].forEach(method => {
+[ 'map', 'qs' ].forEach(method => {
   Jsonapi.prototype[method] = function (args) {
     const config = this.config;
     return require(`./${method}`)(Object.assign({ config }, args ));
