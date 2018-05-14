@@ -10,15 +10,18 @@
   "author": "Alfonso Gómez-Arzola <alfonso@chromatichq.com>",
   "license": "MIT",
   "dependencies": {
+    "axios": "^0.18.0",
     "lodash": "^4.17.5",
     "request": "^2.85.0"
   },
   "devDependencies": {
+    "chai": "^4.1.2",
     "eslint": "^4.19.1",
     "mocha": "^5.1.1",
     "pre-push": "^0.1.1",
     "should": "^13.2.1",
-    "sinon": "^4.5.0"
+    "sinon": "^4.5.0",
+    "sinon-chai": "^3.0.0"
   },
   "directories": {
     "test": "test"
