@@ -19,10 +19,6 @@ function save() {
     object.__new = false;
 
     return object;
-  }).catch(err => {
-    // @TODO: Set message according to error codes.
-    // let message = 'An error occurred making a request to the JSON API.';
-    throw new Error(err.message);
   });
 }
 
