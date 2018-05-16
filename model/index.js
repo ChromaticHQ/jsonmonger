@@ -1,4 +1,5 @@
 const _ = require('lodash');
+const destroy = require('./destroy');
 // TIL there is a Fetch API, so it might make sense to rename this method.
 // Ref: https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API
 const fetch = require('./fetch');
@@ -138,6 +139,7 @@ function Model(maps, { axios } = {}) {
     }
   }
 
+  JsonmongerModel.prototype.destroy = destroy;
   JsonmongerModel.prototype.fetch = fetch;
   JsonmongerModel.prototype.save = save;
 
