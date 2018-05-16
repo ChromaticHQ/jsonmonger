@@ -4,7 +4,7 @@ const raw_post = require('./fixtures/post');
 const map = require('../map');
 const _ = require('lodash');
 
-describe('map', () => {
+describe('Jsonmonger#map', () => {
   let result;
 
   before(() => {

@@ -6,7 +6,7 @@ chai.use(require('sinon-chai'));
 
 const Model = require('../model');
 
-describe('JsonmongerModel', () => {
+describe('Jsonmonger#Model', () => {
   it('should return an extended Model constructor', () => {
     const contrived_method = sinon.spy(() => 'contrived result');
 

@@ -2,7 +2,7 @@ require('should');
 const config = require('./config');
 const qs = require('../qs');
 
-describe('qs', () => {
+describe('Jsonmonger#qs', () => {
   let result;
   before(() => {
     result = qs({ config, type: 'post' });

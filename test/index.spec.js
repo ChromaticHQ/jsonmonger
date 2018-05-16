@@ -1,20 +1,14 @@
-require('should');
-const config = require('./config');
-const Jsonapi = require('../');
+const expect = require('chai').expect;
+const Jsonmonger = require('../');
 
-describe('Jsonapi', () => {
-  let jsonapi;
-  before(() => {
-    jsonapi = new Jsonapi(config);
+describe('Jsonmonger', () => {
+  it('should return an object', () => {
+    expect(Jsonmonger).to.be.instanceOf(Object);
   });
 
-  it('should return an instantiated Jsonapi object', () => {
-    jsonapi.should.be.instanceOf(Jsonapi);
-    jsonapi.config.should.deepEqual(config);
-  });
-
-  it('should have get, map, and qs methods', () => {
-    jsonapi.map.should.be.instanceOf(Function);
-    jsonapi.qs.should.be.instanceOf(Function);
+  it('should have map, Model, and qs methods', () => {
+    expect(Jsonmonger.map).to.be.instanceOf(Function);
+    expect(Jsonmonger.Model).to.be.instanceOf(Function);
+    expect(Jsonmonger.qs).to.be.instanceOf(Function);
   });
 });
