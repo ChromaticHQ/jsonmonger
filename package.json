@@ -4,7 +4,7 @@
   "description": "A jsonapi-compliant abstraction layer for your JavaScript applications.",
   "main": "index.js",
   "scripts": {
-    "test": "mocha",
+    "test": "mocha test/**/**/*.spec.js",
     "lint": "eslint --config .eslintrc.yaml --ignore-path .eslintignore ./"
   },
   "author": "Alfonso Gómez-Arzola <alfonso@chromatichq.com>",
