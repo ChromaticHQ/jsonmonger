@@ -1,5 +1,5 @@
 require('should');
-const config = require('./config');
+const config = require('./fixtures/config');
 const qs = require('../qs');
 
 describe('Jsonmonger#qs', () => {
