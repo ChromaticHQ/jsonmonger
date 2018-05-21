@@ -7,6 +7,7 @@ const get = require('./get');
 const save = require('./save');
 const set = require('./set');
 const validate = require('./validate');
+const MODELS = Symbol.for('Jsonmonger.models');
 
 module.exports = Model;
 
@@ -18,6 +19,11 @@ function Model(maps, { axios } = {}) {
   delete props.endpoint;
   delete props.type;
 
+  // Register model in global space.
+  if (Object.getOwnPropertySymbols(global).indexOf(MODELS) === -1) {
+    global[MODELS] = {};
+  }
+  global[MODELS][type] = JsonmongerModel;
 
   function JsonmongerModel(values) {
     Object.defineProperties(this, {

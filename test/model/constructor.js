@@ -25,6 +25,16 @@ describe('constructor', () => {
     expect(contrived_method).to.be.calledOnce;
   });
 
+  it('should store a global reference for the model', () => {
+    const Keyboard = new Model({
+      type: 'keyboard',
+      endpoint: '/keyboards',
+    });
+
+    const symbol = Symbol.for('Jsonmonger.models');
+    expect(global[symbol].keyboard).to.deep.equal(Keyboard);
+  });
+
   it('should set changed props when appropriate', () => {
     const Person = new Model({
       type: 'person',
