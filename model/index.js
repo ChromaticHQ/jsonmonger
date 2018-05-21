@@ -4,6 +4,7 @@ const destroy = require('./destroy');
 // Ref: https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API
 const fetch = require('./fetch');
 const get = require('./get');
+const hydrate = require('./hydrate');
 const save = require('./save');
 const set = require('./set');
 const validate = require('./validate');
@@ -89,6 +90,18 @@ function Model(maps, { axios } = {}) {
         writable: true,
         configurable: false,
       },
+      __related: {
+        value: {},
+        enumerable: false,
+        writable: true,
+        configurable: false,
+      },
+      __relationships: {
+        value: {},
+        enumerable: false,
+        writable: true,
+        configurable: false,
+      },
       __saved: {
         value: false,
         enumerable: false,
@@ -147,6 +160,7 @@ function Model(maps, { axios } = {}) {
 
   JsonmongerModel.prototype.destroy = destroy;
   JsonmongerModel.prototype.fetch = fetch;
+  JsonmongerModel.prototype.hydrate = hydrate;
   JsonmongerModel.prototype.save = save;
 
   return JsonmongerModel;

@@ -6,13 +6,12 @@ function fetch() {
   const axios = object.__axios;
 
   return axios(request).then(response => {
-    object.__data = response.data.data;
-    object.__related = (response.data.included || []).reduce((result, item) => {
+    const related = (response.data.included || []).reduce((result, item) => {
       result[item.id] = item;
       return result;
     }, {});
-    object.__changed_props = {};
-    object.__previous_props = {};
+
+    object.hydrate({ data: response.data.data, related });
     object.__saved = true;
     object.__new = false;
 
