@@ -1,12 +1,13 @@
 const _ = require('lodash');
 const expect = require('chai').expect;
 const Model = require('../../model');
+const raw_json = require('../fixtures/post.json');
 
 describe('relationships', () => {
-  let Blockquote, Image, Paragraph, Person, Post, post;
+  let Image, Paragraph, Person, Post, post;
   before(done => {
     const axios = request => {
-      const data = _.cloneDeep(require('../fixtures/post.json'));
+      const data = _.cloneDeep(raw_json);
 
       return Promise.resolve({
         status: 200,
@@ -14,12 +15,6 @@ describe('relationships', () => {
       });
     }
 
-    Blockquote = new Model({
-      type: 'blockquote',
-      endpoint: '/blockquotes',
-      text: 'attributes.text',
-      source: 'attributes.source',
-    }, { axios });
     Image = new Model({
       type: 'image',
       endpoint: '/images',
@@ -84,7 +79,8 @@ describe('relationships', () => {
       } else if (block.type === 'image') {
         expectedModel = Image;
       } else if (block.type === 'blockquote') {
-        expectedModel = Blockquote;
+        // We’re not defining a dedicated Blockquote model.
+        expectedModel = Object;
       }
 
       expect(block).to.be.instanceOf(expectedModel);
@@ -95,5 +91,10 @@ describe('relationships', () => {
     expect(post.author.__parent).to.deep.equal(post);
   });
 
-  it('should load raw related data when a model is not available');
+  it('should load raw related data when a model is not available', () => {
+    const blockquote = post.body.find(block => block.type === 'blockquote');
+    const raw_blockquote = raw_json.included.find(block => block.type === 'blockquote');
+
+    expect(blockquote).to.deep.equal(raw_blockquote);
+  });
 });
