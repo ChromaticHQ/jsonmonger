@@ -7,7 +7,7 @@ function destroy() {
   const axios = object.__axios;
   const request = {
     method: 'delete',
-    url: `${object.endpoint}/${object.id}`,
+    url: `${object.__config.base_url}${object.endpoint}/${object.id}`,
   }
 
   return axios(request).then(result => {

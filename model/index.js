@@ -9,10 +9,11 @@ const save = require('./save');
 const set = require('./set');
 const validate = require('./validate');
 const MODELS = Symbol.for('Jsonmonger.models');
+const CONFIG = Symbol.for('Jsonmonger.config');
 
 module.exports = Model;
 
-function Model(maps, { axios } = {}) {
+function Model(maps, { axios, config = global[CONFIG] } = {}) {
   validate(maps);
 
   const props = _.cloneDeep(maps);
@@ -62,6 +63,14 @@ function Model(maps, { axios } = {}) {
       },
       __changed_props: {
         value: {},
+        enumerable: false,
+        writable: true,
+        configurable: false,
+      },
+      __config: {
+        value: {
+          base_url: config.base_url,
+        },
         enumerable: false,
         writable: true,
         configurable: false,
@@ -118,13 +127,13 @@ function Model(maps, { axios } = {}) {
   Object.defineProperties(JsonmongerModel.prototype, {
     endpoint: {
       value: endpoint,
-      enumerable: false,
+      enumerable: true,
       writable: false,
       configurable: false,
     },
     type: {
       value: type,
-      enumerable: false,
+      enumerable: true,
       writable: false,
       configurable: false,
     },

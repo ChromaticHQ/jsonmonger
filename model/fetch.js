@@ -22,6 +22,6 @@ function fetch() {
 function build_request({ object }) {
   return {
     method: 'get',
-    url: `${object.endpoint}/${object.id}`,
+    url: `${object.__config.base_url}${object.endpoint}/${object.id}`,
   }
 }

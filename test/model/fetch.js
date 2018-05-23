@@ -7,7 +7,7 @@ chai.use(require('sinon-chai'));
 const Model = require('../../model');
 
 describe('fetch() method', () => {
-  let axios, Post, post, id;
+  let axios, base_url, Post, post, id;
 
   before(() => {
     id = '1234';
@@ -20,6 +20,8 @@ describe('fetch() method', () => {
         data,
       });
     });
+
+    base_url = global[Symbol.for('Jsonmonger.config')].base_url;
 
     Post = new Model({
       type: 'post',
@@ -43,7 +45,7 @@ describe('fetch() method', () => {
       expect(axios).to.be.calledOnce;
       expect(axios).to.be.calledWith({
         method: 'get',
-        url: '/posts/1234',
+        url: `${base_url}/posts/1234`,
       });
     }).then(done).catch(done);
   });

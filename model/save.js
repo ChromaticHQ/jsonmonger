@@ -36,7 +36,7 @@ function save() {
 function build_request({ object }) {
   return {
     method: object.__new ? 'post' : 'patch',
-    url: `${object.endpoint}${object.id && !object.__new ? '/' + object.id : ''}`,
+    url: `${object.__config.base_url}${object.endpoint}${object.id && !object.__new ? '/' + object.id : ''}`,
     body: (function (object) {
       const changed_prop_keys = Object.keys(object.__changed_props);
       return changed_prop_keys.reduce((result, key) => {

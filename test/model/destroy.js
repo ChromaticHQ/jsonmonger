@@ -7,7 +7,7 @@ const Model = require('../../model');
 const raw_data = require('../fixtures/post.json');
 
 describe('destroy() method', () => {
-  let axios, Thing, thing;
+  let axios, base_url, Thing, thing;
 
   before(() => {
     axios = sinon.spy(request => {
@@ -25,6 +25,8 @@ describe('destroy() method', () => {
       }
     });
 
+    base_url = global[Symbol.for('Jsonmonger.config')].base_url;
+
     Thing = new Model({
       type: 'thing',
       endpoint: '/things',
@@ -41,7 +43,7 @@ describe('destroy() method', () => {
     expect(axios).to.be.calledTwice;
     expect(axios).to.be.calledWith({
       method: 'delete',
-      url: '/things/1',
+      url: `${base_url}/things/1`,
     });
   });
 

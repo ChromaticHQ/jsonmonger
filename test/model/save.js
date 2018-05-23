@@ -7,7 +7,7 @@ chai.use(require('sinon-chai'));
 const Model = require('../../model');
 
 describe('save() method', () => {
-  let axios, date, Post, post, values;
+  let axios, base_url, date, Post, post, values;
 
   before(() => {
     date = new Date();
@@ -24,6 +24,8 @@ describe('save() method', () => {
         data,
       });
     });
+
+    base_url = global[Symbol.for('Jsonmonger.config')].base_url;
 
     Post = new Model({
       type: 'post',
@@ -57,7 +59,7 @@ describe('save() method', () => {
       expect(axios).to.be.calledOnce;
       expect(axios).to.be.calledWith({
         method: 'post',
-        url: '/posts',
+        url: `${base_url}/posts`,
         body: {
           data: {
             attributes: {
@@ -87,7 +89,7 @@ describe('save() method', () => {
       expect(axios).to.be.calledTwice;
       expect(axios).to.be.calledWith({
         method: 'patch',
-        url: '/posts/1234',
+        url: `${base_url}/posts/1234`,
         body: {
           data: {
             attributes: {

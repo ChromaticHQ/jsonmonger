@@ -8,7 +8,7 @@ describe('config() method', () => {
 
   before(() => {
     options = {
-      api_url: 'https://some.contrived.url',
+      base_url: 'https://some.contrived.url',
     }
 
     config_object = config(options);
