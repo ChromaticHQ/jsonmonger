@@ -56,8 +56,8 @@ describe('Jsonmonger#map', () => {
       url: included[4].attributes.path.alias,
       topics: [{
         type: 'topic',
-        label: included[5].attributes.name,
-        url: included[5].attributes.path.alias,
+        label: included[6].attributes.name,
+        url: included[6].attributes.path.alias,
       }],
     });
   });

@@ -1,76 +1,44 @@
 const _ = require('lodash');
-const expect = require('chai').expect;
-const Model = require('../../model');
+const chai = require('chai');
+const expect = chai.expect;
+const sinon = require('sinon');
+chai.use(require('sinon-chai'));
+
 const raw_json = require('../fixtures/post.json');
 
 describe('relationships', () => {
-  let Image, Paragraph, Person, Post, post;
+  let axios, Image, Paragraph, Person, Post, post, Role;
   before(done => {
-    const axios = request => {
+    axios = sinon.spy(request => {
       const data = _.cloneDeep(raw_json);
 
       return Promise.resolve({
         status: 200,
         data,
       });
-    }
+    });
 
-    Image = new Model({
-      type: 'image',
-      endpoint: '/images',
-      url: 'attributes.src',
-      alt: 'attributes.alt',
-    }, { axios });
-    Paragraph = new Model({
-      type: 'paragraph',
-      endpoint: '/paragraphs',
-      text: 'attributes.text',
-    }, { axios });
-    Person = new Model({
-      type: 'person',
-      endpoint: '/people',
-      fullName: 'attributes.name',
-      firstName: function (value) {
-        if (value) {
-          const names = this.fullName.split(' ');
-          names[0] = value;
-          this.fullName = names.join(' ');
-          return value;
-        } else {
-          return this.fullName.split(' ')[0];
-        }
-      },
-      lastName: function (value) {
-        if (value) {
-          const names = this.fullName.split(' ');
-          const lastName = value.split(' ');
-          names.splice(1, lastName.length, ...lastName);
-          this.fullName = names.join(' ');
-          return value;
-        } else {
-          return this.fullName.split(' ').slice(1).join(' ');
-        }
-      },
-      bio: 'attributes.biography',
-      alias: 'attributes.path.alias',
-    }, { axios });
-    Post = new Model({
-      type: 'post',
-      endpoint: '/posts',
-      title: 'attributes.title',
-      subtitle: 'attributes.sub_title',
-      author: 'relationships.author',
-      body: 'relationships.body',
-    }, { axios });
+    Image = require('../fixtures/models/Image')({ axios });
+    Paragraph = require('../fixtures/models/Paragraph')({ axios });
+    Person = require('../fixtures/models/Person')({ axios });
+    Post = require('../fixtures/models/Post')({ axios });
+    Role = require('../fixtures/models/Role')({ axios });
 
     new Post({ id: 1 }).fetch().then(result => {
       post = result;
-      done();
-    });
+    }).then(done).catch(done);
   });
+
+  afterEach(() => axios.resetHistory());
 
   it('should load relationships as models', () => {
     expect(post.author).to.be.instanceOf(Person);
+
+    expect(post.author.roles).to.be.instanceOf(Array);
+    post.author.roles.forEach(role => {
+      expect(role).to.be.instanceOf(Role);
+    });
+
     expect(post.body).to.be.instanceOf(Array);
     post.body.forEach(block => {
       let expectedModel;
@@ -78,8 +46,10 @@ describe('relationships', () => {
         expectedModel = Paragraph;
       } else if (block.type === 'image') {
         expectedModel = Image;
+        expect(block.credit).to.be.instanceOf(Person);
       } else if (block.type === 'blockquote') {
-        // We’re not defining a dedicated Blockquote model.
+        // We’re not defining a dedicated Blockquote model, so we expect it
+        // to return the raw data.
         expectedModel = Object;
       }
 
@@ -89,6 +59,9 @@ describe('relationships', () => {
 
   it('should store a reference to the related record’s immediate parent in the tree', () => {
     expect(post.author.__parent).to.deep.equal(post);
+    post.author.roles.forEach(role => {
+      expect(role.__parent).to.deep.equal(post.author);
+    });
   });
 
   it('should load raw related data when a model is not available', () => {
@@ -96,5 +69,46 @@ describe('relationships', () => {
     const raw_blockquote = raw_json.included.find(block => block.type === 'blockquote');
 
     expect(blockquote).to.deep.equal(raw_blockquote);
+  });
+
+  it('should make a request without relationship parameters', () => {
+    return new Post({ id: '1' }).fetch({ related: null }).then(() => {
+      expect(axios).to.be.calledOnce;
+      expect(axios).to.be.calledWith({
+        method: 'get',
+        url: 'https://some.contrived.url/posts/1',
+      });
+    });
+  });
+
+  it('should request to include one relationship', () => {
+    return new Post({ id: '1' }).fetch({ related: 'author' }).then(() => {
+      expect(axios).to.be.calledOnce;
+      expect(axios).to.be.calledWith({
+        method: 'get',
+        url: 'https://some.contrived.url/posts/1?include=author,author.roles',
+      });
+    });
+  });
+
+  it('should request to include multiple relationships', () => {
+    return new Post({ id: '1' }).fetch({ related: [ 'author', 'body' ] })
+      .then(() => {
+        expect(axios).to.be.calledOnce;
+        expect(axios).to.be.calledWith({
+          method: 'get',
+          url: 'https://some.contrived.url/posts/1?include=author,author.roles,body,body.credit',
+        });
+      });
+  });
+
+  it('should request to include all relationships', () => {
+    return new Post({ id: '1' }).fetch({ related: true }).then(() => {
+      expect(axios).to.be.calledOnce;
+      expect(axios).to.be.calledWith({
+        method: 'get',
+        url: 'https://some.contrived.url/posts/1?include=author,author.roles,body,body.credit,category',
+      });
+    });
   });
 });

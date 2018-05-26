@@ -27,6 +27,12 @@
           "type": "blockquote",
           "id": "104"
         }]
+      },
+      "category": {
+        "data": [{
+          "type": "taxonomy",
+          "id": "301"
+        }]
       }
     }
   },
@@ -42,6 +48,14 @@
     "attributes": {
       "src": "/path/to/image.jpg",
       "alt": "You do provide ALT values, right?"
+    },
+    "relationships": {
+      "author": {
+        "data": {
+          "type": "person",
+          "id": "202"
+        }
+      }
     }
   },{
     "type": "paragraph",
@@ -76,6 +90,39 @@
           "type": "taxonomy",
           "id": "301"
         }]
+      },
+      "roles": {
+        "data": [{
+          "type": "role",
+          "id": "401"
+        }]
+      }
+    }
+  },{
+    "type": "person",
+    "id": "202",
+    "attributes": {
+      "name": "Foto McFotoface",
+      "biography": "It’s film gran all the way down, friend.",
+      "path": {
+        "alias": "/authors/foto-mcfotoface"
+      }
+    },
+    "relationships": {
+      "topics": {
+        "data": [{
+          "type": "taxonomy",
+          "id": "301"
+        }]
+      },
+      "roles": {
+        "data": [{
+          "type": "role",
+          "id": "401"
+        },{
+          "type": "rule",
+          "id": "402"
+        }]
       }
     }
   },{
@@ -85,6 +132,24 @@
       "name": "Test-driven Development",
       "path": {
         "alias": "/topics/test-driven-development"
+      }
+    }
+  },{
+    "type": "role",
+    "id": "401",
+    "attributes": {
+      "name": "Writer",
+      "path": {
+        "alias": "/writers"
+      }
+    }
+  },{
+    "type": "role",
+    "id": "402",
+    "attributes": {
+      "name": "Photographer",
+      "path": {
+        "alias": "/photographers"
       }
     }
   }]
