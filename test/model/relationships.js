@@ -70,45 +70,4 @@ describe('relationships', () => {
 
     expect(blockquote).to.deep.equal(raw_blockquote);
   });
-
-  it('should make a request without relationship parameters', () => {
-    return new Post({ id: '1' }).fetch({ related: null }).then(() => {
-      expect(axios).to.be.calledOnce;
-      expect(axios).to.be.calledWith({
-        method: 'get',
-        url: 'https://some.contrived.url/posts/1',
-      });
-    });
-  });
-
-  it('should request to include one relationship', () => {
-    return new Post({ id: '1' }).fetch({ related: 'author' }).then(() => {
-      expect(axios).to.be.calledOnce;
-      expect(axios).to.be.calledWith({
-        method: 'get',
-        url: 'https://some.contrived.url/posts/1?include=author,author.roles',
-      });
-    });
-  });
-
-  it('should request to include multiple relationships', () => {
-    return new Post({ id: '1' }).fetch({ related: [ 'author', 'body' ] })
-      .then(() => {
-        expect(axios).to.be.calledOnce;
-        expect(axios).to.be.calledWith({
-          method: 'get',
-          url: 'https://some.contrived.url/posts/1?include=author,author.roles,body,body.credit',
-        });
-      });
-  });
-
-  it('should request to include all relationships', () => {
-    return new Post({ id: '1' }).fetch({ related: true }).then(() => {
-      expect(axios).to.be.calledOnce;
-      expect(axios).to.be.calledWith({
-        method: 'get',
-        url: 'https://some.contrived.url/posts/1?include=author,author.roles,body,body.credit,category',
-      });
-    });
-  });
 });

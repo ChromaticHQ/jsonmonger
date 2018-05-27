@@ -1,8 +1,11 @@
+const _ = require('lodash');
+
 module.exports = fetch;
 
-function fetch() {
+function fetch(options) {
   const object = this;
-  const request = build_request({ object });
+  const config = _.merge({}, object.__config, options);
+  const request = build_request({ config, object });
   const axios = object.__axios;
 
   return axios(request).then(response => {
