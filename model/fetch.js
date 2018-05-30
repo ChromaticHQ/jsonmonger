@@ -22,9 +22,64 @@ function fetch(options) {
   });
 }
 
-function build_request({ object }) {
-  return {
+function build_request({ config, object }) {
+  const request = {
     method: 'get',
-    url: `${object.__config.base_url}${object.endpoint}/${object.id}`,
+    url: `${config.base_url}${object.endpoint}/${object.id}`,
   }
+  const include_param = get_include_param({ object, related: config.related });
+
+  if (include_param) {
+    request.url += `?include=${include_param}`;
+  }
+
+  return request;
+}
+
+function get_include_param({ object, related }) {
+  let include_param = '';
+
+  if (!related) {
+    return include_param;
+  }
+
+  switch (typeof related) {
+    case 'string':
+      include_param += calculate_related_paths({ object, prop: related });
+      break;
+
+    case 'object':
+      if (Array.isArray(related)) {
+        include_param += related
+          .map(item => get_include_param({ object, related: item }))
+          .filter(item => item)
+          .join(',');
+      } else {
+        include_param += Object.keys(related)
+          .map(item => get_include_param({ object, related: item }))
+          .filter(item => item)
+          .join(',');
+      }
+      break;
+
+    case 'boolean':
+      include_param += Object.keys(object.__maps)
+        .map(item => get_include_param({ object, related: item }))
+        .filter(item => item)
+        .join(',');
+      break;
+  }
+
+  return include_param;
+}
+
+function calculate_related_paths({ object, prop }) {
+  const directive = object.__maps[prop];
+
+  if (typeof directive !== 'string' || !directive.match(/^relationships\./)) {
+    // @TODO: Probably good to console.warn() here.
+    return '';
+  }
+
+  return directive.replace(/^relationships\./, '');
 }
