@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha test/**/**/*.spec.js",
-    "lint": "eslint --config .eslintrc.yaml --ignore-path .eslintignore ./"
+    "lint": "eslint --config .eslintrc.yaml --ignore-path .eslintignore ./",
+    "docs": "rm -rf docs && jsdoc -r --configure .jsdoc.json --readme README.md index.js"
   },
   "author": "Alfonso Gómez-Arzola <alfonso@chromatichq.com>",
   "license": "MIT",
@@ -17,6 +18,7 @@
   "devDependencies": {
     "chai": "^4.1.2",
     "eslint": "^4.19.1",
+    "jsdoc": "^3.5.5",
     "mocha": "^5.1.1",
     "pre-push": "^0.1.1",
     "should": "^13.2.1",
