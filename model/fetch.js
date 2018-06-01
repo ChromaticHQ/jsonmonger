@@ -54,19 +54,17 @@ function get_include_param({ object, related }) {
           .map(item => get_include_param({ object, related: item }))
           .filter(item => item)
           .join(',');
-      } else {
-        include_param += Object.keys(related)
+      }
+      // @TODO: Support non-iterable objects (for nested relationships?)
+      break;
+
+    case 'boolean':
+      if (related) {
+        include_param += Object.keys(object.__maps)
           .map(item => get_include_param({ object, related: item }))
           .filter(item => item)
           .join(',');
       }
-      break;
-
-    case 'boolean':
-      include_param += Object.keys(object.__maps)
-        .map(item => get_include_param({ object, related: item }))
-        .filter(item => item)
-        .join(',');
       break;
   }
 
