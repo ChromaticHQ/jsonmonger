@@ -13,7 +13,7 @@ const CONFIG = Symbol.for('Jsonmonger.config');
 
 module.exports = Model;
 
-function Model(maps, { axios, config = global[CONFIG] } = {}) {
+function Model(maps, config = {}) {
   validate(maps);
 
   const props = _.cloneDeep(maps);
@@ -56,7 +56,7 @@ function Model(maps, { axios, config = global[CONFIG] } = {}) {
         configurable: false,
       },
       __axios: {
-        value: axios || require('axios'),
+        value: config.axios || require('axios'),
         enumerable: false,
         writable: false,
         configurable: false,
@@ -68,9 +68,7 @@ function Model(maps, { axios, config = global[CONFIG] } = {}) {
         configurable: false,
       },
       __config: {
-        value: {
-          base_url: config.base_url,
-        },
+        value: _.merge({}, global[CONFIG], config),
         enumerable: false,
         writable: true,
         configurable: false,

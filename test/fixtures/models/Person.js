@@ -1,5 +1,4 @@
 const Model = require('../../../').Model;
-const Role = require('./Role');
 
 module.exports = ({ axios } = {}) => new Model({
   type: 'person',
@@ -31,5 +30,4 @@ module.exports = ({ axios } = {}) => new Model({
   roles: 'relationships.roles',
 }, {
   axios,
-  related: [ Role ],
 });

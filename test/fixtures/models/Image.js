@@ -1,5 +1,4 @@
 const Model = require('../../../').Model;
-const Person = require('./Person');
 
 module.exports = ({ axios } = {}) => new Model({
   type: 'image',
@@ -9,5 +8,4 @@ module.exports = ({ axios } = {}) => new Model({
   credit: 'relationships.author',
 }, {
   axios,
-  related: [ Person ],
 });

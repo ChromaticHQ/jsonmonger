@@ -1,9 +1,6 @@
 const Model = require('../../../').Model;
-const Image = require('./Image');
-const Paragraph = require('./Paragraph');
-const Person = require('./Person');
 
-module.exports = ({ axios } = {}) => new Model({
+module.exports = (config = {}) => new Model({
   type: 'post',
   endpoint: '/posts',
   title: 'attributes.title',
@@ -11,7 +8,4 @@ module.exports = ({ axios } = {}) => new Model({
   author: 'relationships.author',
   body: 'relationships.body',
   topics: 'relationships.category',
-}, {
-  axios,
-  related: [ Image, Paragraph, Person ],
-});
+}, config);

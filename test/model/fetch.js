@@ -94,4 +94,19 @@ describe('fetch() method', () => {
       });
     });
   });
+
+  it('should use the model’s default if set', () => {
+    const PostWithRelated = require('../fixtures/models/Post')({
+      axios,
+      related: [ 'author', 'topics' ],
+    });
+
+    return new PostWithRelated({ id }).fetch().then(() => {
+      expect(axios).to.be.calledOnce;
+      expect(axios).to.be.calledWith({
+        method: 'get',
+        url: 'https://some.contrived.url/posts/1234?include=author,category',
+      });
+    });
+  });
 })
