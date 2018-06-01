@@ -1,7 +1,7 @@
 {
   "name": "jsonmonger",
   "version": "0.2.1",
-  "description": "A jsonapi-compliant abstraction layer for your JavaScript applications.",
+  "description": "A json:api-compliant abstraction layer for your JavaScript applications.",
   "main": "index.js",
   "scripts": {
     "test": "mocha test/**/**/*.spec.js",
@@ -28,7 +28,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/agarzola/jsonmonger.git"
+    "url": "git+https://github.com/ChromaticHQ/jsonmonger.git"
   },
   "keywords": [
     "json",
@@ -36,9 +36,9 @@
     "mapping"
   ],
   "bugs": {
-    "url": "https://github.com/agarzola/jsonmonger/issues"
+    "url": "https://github.com/ChromaticHQ/jsonmonger/issues"
   },
-  "homepage": "https://github.com/agarzola/jsonmonger#readme",
+  "homepage": "https://github.com/ChromaticHQ/jsonmonger#readme",
   "pre-push": [
     "test",
     "lint"
