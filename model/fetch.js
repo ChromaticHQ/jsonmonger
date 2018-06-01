@@ -60,7 +60,7 @@ function get_include_param({ object, related }) {
 
     case 'boolean':
       if (related) {
-        include_param += Object.keys(object.__maps)
+        include_param += Object.keys(object.__schema)
           .map(item => get_include_param({ object, related: item }))
           .filter(item => item)
           .join(',');
@@ -72,7 +72,7 @@ function get_include_param({ object, related }) {
 }
 
 function calculate_related_paths({ object, prop }) {
-  const directive = object.__maps[prop];
+  const directive = object.__schema[prop];
 
   if (typeof directive !== 'string' || !directive.match(/^relationships\./)) {
     // @TODO: Probably good to console.warn() here.

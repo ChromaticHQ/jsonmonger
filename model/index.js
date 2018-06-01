@@ -13,10 +13,10 @@ const CONFIG = Symbol.for('Jsonmonger.config');
 
 module.exports = Model;
 
-function Model(maps, config = {}) {
-  validate(maps);
+function Model(schema, config = {}) {
+  validate(schema);
 
-  const props = _.cloneDeep(maps);
+  const props = _.cloneDeep(schema);
   const { endpoint, type } = props;
   delete props.endpoint;
   delete props.type;
@@ -79,7 +79,7 @@ function Model(maps, config = {}) {
         writable: true,
         configurable: false,
       },
-      __maps: {
+      __schema: {
         value: props,
         enumerable: false,
         writable: true,

@@ -40,7 +40,7 @@ function build_request({ object }) {
     body: (function (object) {
       const changed_prop_keys = Object.keys(object.__changed_props);
       return changed_prop_keys.reduce((result, key) => {
-        const map = _.get(object, `__maps.${key}`);
+        const map = _.get(object, `__schema.${key}`);
         _.set(result, `data.${map}`, _.get(object, `__data.${map}`));
         return result;
       }, { data: {} });
