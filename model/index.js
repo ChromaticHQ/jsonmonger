@@ -3,11 +3,11 @@ const destroy = require('./destroy');
 // TIL there is a Fetch API, so it might make sense to rename this method.
 // Ref: https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API
 const fetch = require('./fetch');
-const get = require('./get');
+const get = require('./lib/get');
 const hydrate = require('./hydrate');
 const save = require('./save');
-const set = require('./set');
-const validate = require('./validate');
+const set = require('./lib/set');
+const validate = require('./lib/validate');
 const MODELS = Symbol.for('Jsonmonger.models');
 const CONFIG = Symbol.for('Jsonmonger.config');
 

@@ -1,5 +1,5 @@
 const _ = require('lodash');
-const get_prop_info = require('./lib/get_prop_info');
+const get_prop_info = require('./get_prop_info');
 
 module.exports = set;
 
