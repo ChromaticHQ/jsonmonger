@@ -4,8 +4,6 @@ const expect = chai.expect;
 const sinon = require('sinon');
 chai.use(require('sinon-chai'));
 
-const Model = require('../../model');
-
 describe('fetch() method', () => {
   let axios, base_url, Post, post, id;
 
@@ -23,12 +21,7 @@ describe('fetch() method', () => {
 
     base_url = global[Symbol.for('Jsonmonger.config')].base_url;
 
-    Post = new Model({
-      type: 'post',
-      endpoint: '/posts',
-      title: 'attributes.title',
-      sub_title: 'attributes.sub_title',
-    }, { axios });
+    Post = require('../fixtures/models/Post')({ axios });
   });
 
   afterEach(() => {
@@ -58,6 +51,62 @@ describe('fetch() method', () => {
       // that the original `post` object is also updated.
       expect(post).to.deep.equal(new_post);
       expect(post.__data).to.deep.equal(require('../fixtures/post.json').data);
+    });
+  });
+
+  it('should make a request without relationship parameters', () => {
+    return new Post({ id }).fetch({ related: null }).then(() => {
+      expect(axios).to.be.calledOnce;
+      expect(axios).to.be.calledWith({
+        method: 'get',
+        url: 'https://some.contrived.url/posts/1234',
+      });
+    });
+  });
+
+  it('should request to include one relationship', () => {
+    return new Post({ id }).fetch({ related: 'author' }).then(() => {
+      expect(axios).to.be.calledOnce;
+      expect(axios).to.be.calledWith({
+        method: 'get',
+        url: 'https://some.contrived.url/posts/1234?include=author',
+      });
+    });
+  });
+
+  it('should request to include multiple relationships', () => {
+    return new Post({ id }).fetch({ related: [ 'author', 'body' ] })
+      .then(() => {
+        expect(axios).to.be.calledOnce;
+        expect(axios).to.be.calledWith({
+          method: 'get',
+          url: 'https://some.contrived.url/posts/1234?include=author,body',
+        });
+      });
+  });
+
+  it('should request to include all relationships', () => {
+    return new Post({ id }).fetch({ related: true }).then(() => {
+      expect(axios).to.be.calledOnce;
+      expect(axios).to.be.calledWith({
+        method: 'get',
+        url: 'https://some.contrived.url/posts/1234?include=author,body,category',
+      });
+    });
+  });
+
+  it('should use the model’s default if set', () => {
+    const PostWithRelated = require('../fixtures/models/Post')({
+      axios,
+      related: [ 'author', 'topics' ],
+    });
+
+    return new PostWithRelated({ id }).fetch().then(() => {
+      expect(axios).to.be.calledOnce;
+      expect(axios).to.be.calledWith({
+        method: 'get',
+        url: 'https://some.contrived.url/posts/1234?include=author,category',
+      });
     });
   });
 })
