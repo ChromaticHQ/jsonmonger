@@ -13,6 +13,57 @@ const CONFIG = Symbol.for('Jsonmonger.config');
 
 module.exports = Model;
 
+/**
+ * A `DocumentObject` interface represents a single record from the JSON API.
+ * Every time you interact with a record from a json:api server, it will be
+ * through an object that subscribes to this interface.
+ *
+ * Given the following `CustomModel`:
+ * ```javascript
+ * const Author = new Model({
+ *   firstName: 'attributes.field_first_name',
+ *   lastName: 'attributes.field_last_name',
+ * });
+ * ```
+ *
+ * We get a `DocumentObject` by calling this model like so:
+ * ```javascript
+ * // Create a new DocumentObject for a brand new author.
+ * const myAuthor = new Author({
+ *   firstName: 'Arturo',
+ *   lastName: 'Pérez-Reverte',
+ * });
+ *
+ * // Create a new DocumentObject for an existing author record whose ID we know.
+ * const myAuthor = new Author({ id: 'some_id' });
+ * ```
+ *
+ * Every `DocumentObject` includes `fetch()`, `save()`, and `destroy()` methods
+ * that submit requests to the JSON API acting on a single record.
+ *
+ * @interface DocumentObject
+ */
+
+/**
+ * The `Model` constructor returns a custom Jsonmonger Model with the
+ * properties passed in the passed in `schema` object.
+ *
+ * @constructor Model
+ *
+ * @param {Object} schema
+ *   An object detailing the new `CustomModel`’s properties and how they map to
+ *   the raw JSON API payload data.
+ * @param {string} schema.type
+ *   The type of the JSON API records for which the new `CustomModel` should be
+ *   used.
+ * @param {string} schema.endpoint
+ *   The URL path in the JSON API server at which records of this
+ *   `CustomModel`’s type can be accessed/manipulated.
+ *
+ * @return {CustomModel}
+ *   A unique `CustomModel` constructor with which to create `DocumentObject`s
+ *   for a given type.
+ */
 function Model(schema, config = {}) {
   validate(schema);
 
@@ -27,6 +78,21 @@ function Model(schema, config = {}) {
   }
   global[MODELS][type] = JsonmongerModel;
 
+  /**
+   * Create a new DocumentObject.
+   *
+   * The Model constructor returns a DocumentObject object that represents a
+   * single record.
+   *
+   * @constructor CustomModel
+   * @implements DocumentObject
+   *
+   * @param {Object} [values]
+   *   An object with initial values to assign to the new Record.
+   *
+   * @return {DocumentObject}
+   *   A Jsonmonger Record object which is an instance of the Custom Model.
+   */
   function JsonmongerModel(values) {
     Object.defineProperties(this, {
       id: {

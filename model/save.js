@@ -2,6 +2,39 @@ const _ = require('lodash');
 
 module.exports = save;
 
+/**
+ * **Save the data for a `DocumentObject` to the API.** The `.save()` method
+ * updates the `DocumentObject` in place. It also returns the object.
+ *
+ * Consider the following scenario:
+ *
+ * ```javascript
+ * const myAuthor = await new Author({ id: 'some_id' }).fetch();
+ *
+ * // Update the author’s first name.
+ * myAuthor.firstName = 'Laura';
+ *
+ * console.log(myAuthor.saved); // false
+ * ```
+ *
+ * Given the need to save the changes made to the `myAuthor` `DocumentObject`,
+ * both of the following uses are valid:
+ * ```javascript
+ * // Using async/await.
+ * await myAuthor.save();
+ *
+ * // Using the returned promise.
+ * myAuthor.save().then(updatedAuthor => {
+ *   console.log(updatedAuthor === myAuthor); // true
+ * });
+ * ```
+ *
+ * @memberof DocumentObject
+ * @method DocumentObject#save
+ *
+ * @return {Promise<DocumentObject|Error>}
+ *   A promise which resolves when the API responds.
+ */
 function save() {
   const object = this;
   const request = build_request({ object });
@@ -21,17 +54,6 @@ function save() {
     return object;
   });
 }
-
-/* function build_requests(object) {
-  const requests = [];
-  const changed_props = object.__changed_props;
-
-  for (const prop in changed_props) {
-    requests.push(build_request({ object, prop }));
-  }
-
-  return requests;
-} */
 
 function build_request({ object }) {
   return {
