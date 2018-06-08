@@ -7,6 +7,7 @@ const get = require('./get');
 const hydrate = require('./hydrate');
 const save = require('./save');
 const set = require('./set');
+const toObject = require('./toObject');
 const validate = require('./validate');
 const MODELS = Symbol.for('Jsonmonger.models');
 const CONFIG = Symbol.for('Jsonmonger.config');
@@ -169,6 +170,7 @@ function Model(maps, config = {}) {
   JsonmongerModel.prototype.fetch = fetch;
   JsonmongerModel.prototype.hydrate = hydrate;
   JsonmongerModel.prototype.save = save;
+  JsonmongerModel.prototype.toObject = toObject;
 
   return JsonmongerModel;
 }
