@@ -4,4 +4,5 @@ describe('Jsonmonger.Model', () => {
   require('./fetch');
   require('./relationships');
   require('./save');
+  require('./toObject');
 });
