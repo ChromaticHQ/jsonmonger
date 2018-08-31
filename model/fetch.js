@@ -27,7 +27,7 @@ function build_request({ config, object }) {
     method: 'get',
     url: `${config.base_url}${object.endpoint}/${object.id}`,
   }
-  const include_param = get_include_param({ object, related: config.related });
+  const include_param = get_related_fields({ object, related: config.related }).join(',');
 
   if (include_param) {
     request.url += `?include=${include_param}`;
@@ -36,39 +36,39 @@ function build_request({ config, object }) {
   return request;
 }
 
-function get_include_param({ object, related }) {
-  let include_param = '';
+function get_related_fields({ object, related }) {
+  let related_fields = [];
 
   if (!related) {
-    return include_param;
+    return related_fields;
   }
 
   switch (typeof related) {
     case 'string':
-      include_param += calculate_related_paths({ object, prop: related });
+      related_fields.push(calculate_related_paths({ object, prop: related }));
       break;
 
     case 'object':
       if (Array.isArray(related)) {
-        include_param += related
-          .map(item => get_include_param({ object, related: item }))
+        related_fields = related_fields.concat(related
+          .map(item => get_related_fields({ object, related: item }))
+          .map(item => item[0])
           .filter(item => item)
-          .join(',');
+        )
       }
       // @TODO: Support non-iterable objects (for nested relationships?)
       break;
 
     case 'boolean':
-      if (related) {
-        include_param += Object.keys(object.__maps)
-          .map(item => get_include_param({ object, related: item }))
-          .filter(item => item)
-          .join(',');
-      }
+      related_fields = related_fields.concat(Object.keys(object.__maps)
+        .map(item => get_related_fields({ object, related: item }))
+        .map(item => item[0])
+        .filter(item => item)
+      )
       break;
   }
 
-  return include_param;
+  return related_fields;
 }
 
 function calculate_related_paths({ object, prop }) {
