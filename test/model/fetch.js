@@ -95,6 +95,42 @@ describe('fetch() method', () => {
     });
   });
 
+  it('should optionally make relationship requests in parallel', () => {
+    return new Post({ id }).fetch({ related: true, parallel_relationships: true }).then(post => {
+      expect(axios).to.have.callCount(7);
+      expect(axios).to.be.calledWith({
+        method: 'get',
+        url: 'https://some.contrived.url/posts/1234',
+      });
+      expect(axios).to.be.calledWith({
+        method: 'get',
+        url: 'https://some.contrived.url/posts/1234/author',
+      });
+      expect(axios).to.be.calledWith({
+        method: 'get',
+        url: 'https://some.contrived.url/posts/1234/relationships/author',
+      });
+      expect(axios).to.be.calledWith({
+        method: 'get',
+        url: 'https://some.contrived.url/posts/1234/body',
+      });
+      expect(axios).to.be.calledWith({
+        method: 'get',
+        url: 'https://some.contrived.url/posts/1234/relationships/body',
+      });
+      expect(axios).to.be.calledWith({
+        method: 'get',
+        url: 'https://some.contrived.url/posts/1234/category',
+      });
+      expect(axios).to.be.calledWith({
+        method: 'get',
+        url: 'https://some.contrived.url/posts/1234/relationships/category',
+      });
+    });
+  });
+
+  it('should properly populate relationships requested in parallel');
+
   it('should use the model’s default if set', () => {
     const PostWithRelated = require('../fixtures/models/Post')({
       axios,
