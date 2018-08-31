@@ -43,7 +43,7 @@ describe('fetch() method', () => {
     }).then(done).catch(done);
   });
 
-  it('should update the current object with it fetches', () => {
+  it('should update the current object with the data it fetches', () => {
     post = new Post({ id });
 
     post.fetch().then(new_post => {
