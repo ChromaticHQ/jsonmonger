@@ -11,7 +11,7 @@ describe('fetch() method', () => {
     id = '1234';
 
     axios = sinon.spy(request => {
-      const data = _.cloneDeep(require('../fixtures/post.json'));
+      const data = _.cloneDeep(require('../fixtures/data/post.json'));
 
       return Promise.resolve({
         status: 200,

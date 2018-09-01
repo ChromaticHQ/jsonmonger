@@ -4,7 +4,7 @@ const expect = chai.expect;
 const sinon = require('sinon');
 chai.use(require('sinon-chai'));
 
-const raw_json = require('../fixtures/post.json');
+const raw_json = require('../fixtures/data/post.json');
 
 describe('relationships', () => {
   let axios, Image, Paragraph, Person, Post, post, Role;

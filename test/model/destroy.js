@@ -4,7 +4,7 @@ const sinon = require('sinon');
 chai.use(require('sinon-chai'));
 const expect = chai.expect;
 const Model = require('../../model');
-const raw_data = require('../fixtures/post.json');
+const raw_data = require('../fixtures/data/post.json');
 
 describe('destroy() method', () => {
   let axios, base_url, Thing, thing;

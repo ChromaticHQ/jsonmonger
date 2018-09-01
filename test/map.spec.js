@@ -1,6 +1,6 @@
 require('should');
 const config = require('./fixtures/config');
-const raw_post = require('./fixtures/post');
+const raw_post = require('./fixtures/data/post');
 const map = require('../map');
 const _ = require('lodash');
 

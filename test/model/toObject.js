@@ -4,7 +4,7 @@ const expect = chai.expect;
 const sinon = require('sinon');
 chai.use(require('sinon-chai'));
 
-const raw_json = require('../fixtures/post.json');
+const raw_json = require('../fixtures/data/post.json');
 
 /* eslint-disable no-unused-vars */
 describe('to_object() method', () => {
