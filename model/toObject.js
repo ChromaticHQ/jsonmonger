@@ -12,8 +12,13 @@ function populate_values({ object, result = {} }) {
   Object.keys(maps).forEach(key => {
     const value = object[key];
     result[key] = get_value(value);
-    return result;
   });
+
+  // If object is a Model, include type and id.
+  if (object.__maps) {
+    result.id = object.id;
+    result.type = object.type;
+  }
 
   return result;
 }
