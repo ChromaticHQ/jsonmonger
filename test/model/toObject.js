@@ -1,21 +1,20 @@
-const _ = require('lodash');
 const chai = require('chai');
 const expect = chai.expect;
 const sinon = require('sinon');
 chai.use(require('sinon-chai'));
-
-const raw_json = require('../fixtures/data/post.json');
+const api = require('../fixtures/api');
+require('../fixtures/config')();
 
 /* eslint-disable no-unused-vars */
 describe('to_object() method', () => {
-  let axios, Image, Paragraph, Person, Post, post, Role;
-  before(done => {
+  let axios, Image, Paragraph, Person, Post, post, raw_json, Role;
+  before(() => {
     axios = sinon.spy(request => {
-      const data = _.cloneDeep(raw_json);
-
-      return Promise.resolve({
-        status: 200,
-        data,
+      return api(request).then(result => {
+        return {
+          status: 200,
+          data: JSON.parse(result),
+        }
       });
     });
 
@@ -23,11 +22,15 @@ describe('to_object() method', () => {
     Paragraph = require('../fixtures/models/Paragraph')({ axios });
     Person = require('../fixtures/models/Person')({ axios });
     Post = require('../fixtures/models/Post')({ axios });
-    Role = require('../fixtures/models/Role')({ axios });
+    // Role = require('../fixtures/models/Role')({ axios });
 
-    new Post({ id: 1 }).fetch({ related: true }).then(result => {
+    return api({ url: '/posts/1?include=author,body' }).then(data => {
+      raw_json = JSON.parse(data);
+    }).then(() => {
+      return new Post({ id: 1 }).fetch({ related: true });
+    }).then(result => {
       post = result;
-    }).then(done).catch(done);
+    });
   });
 
   afterEach(() => axios.resetHistory());
@@ -45,8 +48,8 @@ describe('to_object() method', () => {
         alias: '/authors/testy-mctestface',
         roles: [
           {
-            name: 'Writer',
-            url: '/writers',
+            id: '401',
+            type: 'role',
           },
         ],
       },
@@ -58,21 +61,22 @@ describe('to_object() method', () => {
           url: '/path/to/image.jpg',
           alt: 'You do provide ALT values, right?',
           credit: {
-            fullName: 'Foto McFotoface',
-            firstName: 'Foto',
-            lastName: 'McFotoface',
-            bio: 'It’s film gran all the way down, friend.',
-            alias: '/authors/foto-mcfotoface',
-            roles: [
-              {
-                name: 'Writer',
-                url: '/writers',
-              },
-              {
-                name: 'Photographer',
-                url: '/photographers',
-              },
-            ],
+            fullName: null,
+            firstName: null,
+            lastName: null,
+            bio: null,
+            alias: null,
+            roles: null,
+            /* roles: [
+             *   {
+             *     name: 'Writer',
+             *     url: '/writers',
+             *   },
+             *   {
+             *     name: 'Photographer',
+             *     url: '/photographers',
+             *   },
+             * ], */
           },
         },
         {

@@ -4,19 +4,20 @@ const sinon = require('sinon');
 chai.use(require('sinon-chai'));
 const expect = chai.expect;
 const Model = require('../../model');
-const raw_data = require('../fixtures/data/post.json');
+const api = require('../fixtures/api');
+require('../fixtures/config')();
 
 describe('destroy() method', () => {
-  let axios, base_url, Thing, thing;
+  let axios, base_url, raw_data, Thing, thing;
 
   before(() => {
     axios = sinon.spy(request => {
       if (request.method === 'get') {
-        const data = _.cloneDeep(raw_data);
-
-        return Promise.resolve({
-          status: 200,
-          data,
+        return api(request).then(result => {
+          return {
+            status: 200,
+            data: JSON.parse(result),
+          }
         });
       } else {
         return Promise.resolve({
@@ -28,12 +29,16 @@ describe('destroy() method', () => {
     base_url = global[Symbol.for('Jsonmonger.config')].base_url;
 
     Thing = new Model({
-      type: 'thing',
-      endpoint: '/things',
+      type: 'post',
+      endpoint: '/posts',
       name: 'attributes.title',
     }, { axios });
 
-    return new Thing({ id: '1' }).fetch().then(result => {
+    return api({ url: '/posts/1' }).then(data => {
+      raw_data = JSON.parse(data);
+    }).then(() => {
+      return new Thing({ id: '1' }).fetch()
+    }).then(result => {
       thing = result;
       return thing.destroy();
     });
@@ -41,10 +46,10 @@ describe('destroy() method', () => {
 
   it('should request to destroy an existing record', () => {
     expect(axios).to.be.calledTwice;
-    expect(axios).to.be.calledWith({
+    expect(axios.getCalls()[1].args).to.deep.equal([{
       method: 'delete',
-      url: `${base_url}/things/1`,
-    });
+      url: `${base_url}/posts/1`,
+    }]);
   });
 
   it('should reset the model as new', () => {
