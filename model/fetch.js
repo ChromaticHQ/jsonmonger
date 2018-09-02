@@ -1,4 +1,5 @@
 const _ = require('lodash');
+const MODELS = Symbol.for('Jsonmonger.models');
 
 module.exports = fetch;
 
@@ -80,9 +81,27 @@ function get_related_fields({ object, related }) {
           .map(item => get_related_fields({ object, related: item }))
           .map(item => item[0])
           .filter(item => item)
-        )
+        );
+      } else if (related) {
+        related_fields = _.flattenDeep(related_fields.concat(Object.keys(related)
+          .map(prop => {
+            if (related[prop] instanceof Object) {
+              return Object.keys(related[prop]).map(key => {
+                const Model = global[MODELS][key];
+                if (!Model) {
+                  return null;
+                }
+
+                const dummy = new Model({});
+                return get_related_fields({ object: dummy, related: dummy.__config.related })
+                  .map(item => `${prop}.${item}`);
+              });
+            } else {
+              return null;
+            }
+          }).filter(item => item)
+        ));
       }
-      // @TODO: Support non-iterable objects (for nested relationships?)
       break;
 
     case 'boolean':
