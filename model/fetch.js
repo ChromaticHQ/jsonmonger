@@ -30,7 +30,7 @@ function fetch(options) {
         }
       });
     } else {
-      main.included.forEach(item => {
+      (main.included || []).forEach(item => {
         related[item.id] = item;
       });
     }
