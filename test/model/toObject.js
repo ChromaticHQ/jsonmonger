@@ -48,8 +48,8 @@ describe('to_object() method', () => {
         alias: '/authors/testy-mctestface',
         roles: [
           {
-            id: '401',
-            type: 'role',
+            name: null,
+            url: null,
           },
         ],
       },
