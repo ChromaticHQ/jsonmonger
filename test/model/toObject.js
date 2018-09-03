@@ -2,7 +2,7 @@ const chai = require('chai');
 const expect = chai.expect;
 const sinon = require('sinon');
 chai.use(require('sinon-chai'));
-const api = require('../fixtures/api');
+const api = require('jsonapilite')(`${__dirname}/../fixtures/data`);
 require('../fixtures/config')();
 
 /* eslint-disable no-unused-vars */
