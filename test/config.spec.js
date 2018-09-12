@@ -25,7 +25,7 @@ describe('config() method', () => {
     try {
       config_object.thing = 'some new value';
     } catch (error) {
-      expect(error.toString()).to.equal('TypeError: Can\'t add property thing, object is not extensible');
+      expect(error.toString()).to.match(/TypeError: (?:Can't|Cannot) add property thing, object is not extensible/);
       return;
     }
 
