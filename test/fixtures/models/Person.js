@@ -6,23 +6,23 @@ module.exports = ({ axios } = {}) => new Model({
   fullName: 'attributes.name',
   firstName: function (value) {
     if (value) {
-      const names = this.fullName.split(' ');
+      const names = (this.fullName || '').split(' ');
       names[0] = value;
       this.fullName = names.join(' ');
       return value;
     } else {
-      return this.fullName.split(' ')[0];
+      return (this.fullName || '').split(' ')[0] || null;
     }
   },
   lastName: function (value) {
     if (value) {
-      const names = this.fullName.split(' ');
+      const names = (this.fullName || '').split(' ');
       const lastName = value.split(' ');
       names.splice(1, lastName.length, ...lastName);
       this.fullName = names.join(' ');
       return value;
     } else {
-      return this.fullName.split(' ').slice(1).join(' ');
+      return (this.fullName || '').split(' ').slice(1).join(' ') || null;
     }
   },
   bio: 'attributes.biography',

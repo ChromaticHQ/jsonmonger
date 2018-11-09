@@ -11,15 +11,17 @@ function get({ object, prop }) {
 
   switch (type) {
     case 'attributes':
-      result = _.get(object, `__data.${map}`);
+      result = _.get(object, `__data.${map}`, null);
       break;
     case 'relationships': {
       const reference = _.get(object, `__data.${map}.data`);
       const related = _.get(object, '__related');
       if (Array.isArray(reference)) {
         result = reference.map(ref => get_related({ parent: object, reference: ref, related }));
-      } else {
+      } else if (reference) {
         result = get_related({ parent: object, reference, related });
+      } else {
+        result = null;
       }
       break;
     }

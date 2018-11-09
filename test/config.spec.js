@@ -2,20 +2,11 @@
 
 const expect = require('chai').expect;
 const config = require('../config');
+const config_object = require('./fixtures/config')();
+const options = require('./fixtures/config/options');
+const symbol = Symbol.for('Jsonmonger.config');
 
 describe('config() method', () => {
-  let config_object, options, symbol;
-
-  before(() => {
-    options = {
-      base_url: 'https://some.contrived.url',
-    }
-
-    config_object = config(options);
-
-    symbol = Symbol.for('Jsonmonger.config');
-  });
-
   it('should create a global symbol', () => {
     expect(config_object).to.deep.equal(options);
     expect(config_object).to.deep.equal(global[symbol]);

@@ -1,21 +1,22 @@
-const _ = require('lodash');
 const chai = require('chai');
 const expect = chai.expect;
 const sinon = require('sinon');
 chai.use(require('sinon-chai'));
+const api = require('../fixtures/api');
+require('../fixtures/config')();
 
 describe('fetch() method', () => {
   let axios, base_url, Post, post, id;
 
   before(() => {
-    id = '1234';
+    id = '1';
 
     axios = sinon.spy(request => {
-      const data = _.cloneDeep(require('../fixtures/post.json'));
-
-      return Promise.resolve({
-        status: 200,
-        data,
+      return api(request).then(result => {
+        return {
+          status: 200,
+          data: JSON.parse(result),
+        };
       });
     });
 
@@ -33,24 +34,24 @@ describe('fetch() method', () => {
     expect(post.fetch()).to.be.instanceOf(Promise);
   });
 
-  it('should request a specific record', done => {
-    new Post({ id }).fetch().then(post => {
+  it('should request a specific record', () => {
+    return new Post({ id }).fetch().then(post => {
       expect(axios).to.be.calledOnce;
       expect(axios).to.be.calledWith({
         method: 'get',
-        url: `${base_url}/posts/1234`,
+        url: `${base_url}/posts/1`,
       });
-    }).then(done).catch(done);
+    });
   });
 
-  it('should update the current object with it fetches', () => {
+  it('should update the current object with the data it fetches', () => {
     post = new Post({ id });
 
-    post.fetch().then(new_post => {
+    return post.fetch().then(new_post => {
       // While the promise does return the object itself, we want to be sure
       // that the original `post` object is also updated.
       expect(post).to.deep.equal(new_post);
-      expect(post.__data).to.deep.equal(require('../fixtures/post.json').data);
+      expect(post.__data).to.deep.equal(require('../fixtures/data/posts/1'));
     });
   });
 
@@ -59,7 +60,7 @@ describe('fetch() method', () => {
       expect(axios).to.be.calledOnce;
       expect(axios).to.be.calledWith({
         method: 'get',
-        url: 'https://some.contrived.url/posts/1234',
+        url: 'https://some.contrived.url/posts/1',
       });
     });
   });
@@ -69,7 +70,7 @@ describe('fetch() method', () => {
       expect(axios).to.be.calledOnce;
       expect(axios).to.be.calledWith({
         method: 'get',
-        url: 'https://some.contrived.url/posts/1234?include=author',
+        url: 'https://some.contrived.url/posts/1?include=author',
       });
     });
   });
@@ -80,7 +81,7 @@ describe('fetch() method', () => {
         expect(axios).to.be.calledOnce;
         expect(axios).to.be.calledWith({
           method: 'get',
-          url: 'https://some.contrived.url/posts/1234?include=author,body',
+          url: 'https://some.contrived.url/posts/1?include=author,body',
         });
       });
   });
@@ -90,10 +91,46 @@ describe('fetch() method', () => {
       expect(axios).to.be.calledOnce;
       expect(axios).to.be.calledWith({
         method: 'get',
-        url: 'https://some.contrived.url/posts/1234?include=author,body,category',
+        url: 'https://some.contrived.url/posts/1?include=author,body,category',
       });
     });
   });
+
+  it('should optionally make relationship requests in parallel', () => {
+    return new Post({ id }).fetch({ related: true, parallel_relationships: true }).then(post => {
+      expect(axios).to.have.callCount(7);
+      expect(axios).to.be.calledWith({
+        method: 'get',
+        url: 'https://some.contrived.url/posts/1',
+      });
+      expect(axios).to.be.calledWith({
+        method: 'get',
+        url: 'https://some.contrived.url/posts/1/author',
+      });
+      expect(axios).to.be.calledWith({
+        method: 'get',
+        url: 'https://some.contrived.url/posts/1/relationships/author',
+      });
+      expect(axios).to.be.calledWith({
+        method: 'get',
+        url: 'https://some.contrived.url/posts/1/body',
+      });
+      expect(axios).to.be.calledWith({
+        method: 'get',
+        url: 'https://some.contrived.url/posts/1/relationships/body',
+      });
+      expect(axios).to.be.calledWith({
+        method: 'get',
+        url: 'https://some.contrived.url/posts/1/category',
+      });
+      expect(axios).to.be.calledWith({
+        method: 'get',
+        url: 'https://some.contrived.url/posts/1/relationships/category',
+      });
+    });
+  });
+
+  it('should properly populate relationships requested in parallel');
 
   it('should use the model’s default if set', () => {
     const PostWithRelated = require('../fixtures/models/Post')({
@@ -105,7 +142,7 @@ describe('fetch() method', () => {
       expect(axios).to.be.calledOnce;
       expect(axios).to.be.calledWith({
         method: 'get',
-        url: 'https://some.contrived.url/posts/1234?include=author,category',
+        url: 'https://some.contrived.url/posts/1?include=author,category',
       });
     });
   });
