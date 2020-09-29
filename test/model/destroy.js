@@ -4,7 +4,7 @@ const sinon = require('sinon');
 chai.use(require('sinon-chai'));
 const expect = chai.expect;
 const Model = require('../../model');
-const api = require('../fixtures/api');
+const api = require('jsonapilite')(`${__dirname}/../fixtures/data`);
 require('../fixtures/config')();
 
 describe('destroy() method', () => {

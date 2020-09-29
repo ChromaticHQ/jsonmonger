@@ -2,7 +2,7 @@ const chai = require('chai');
 const expect = chai.expect;
 const sinon = require('sinon');
 chai.use(require('sinon-chai'));
-const api = require('../fixtures/api');
+const api = require('jsonapilite')(`${__dirname}/../fixtures/data`);
 require('../fixtures/config')();
 
 describe('fetch() method', () => {
@@ -23,6 +23,12 @@ describe('fetch() method', () => {
     base_url = global[Symbol.for('Jsonmonger.config')].base_url;
 
     Post = require('../fixtures/models/Post')({ axios });
+    // Register models for nested relationship tests.
+    require('../fixtures/models/Person')({
+      axios,
+      related: 'roles',
+    });
+    require('../fixtures/models/Role')({ axios });
   });
 
   afterEach(() => {
@@ -82,6 +88,17 @@ describe('fetch() method', () => {
         expect(axios).to.be.calledWith({
           method: 'get',
           url: 'https://some.contrived.url/posts/1?include=author,body',
+        });
+      });
+  });
+
+  it('should request to include nested relationships', () => {
+    return new Post({ id }).fetch({ related: { author: { person: 'roles' } } })
+      .then(() => {
+        expect(axios).to.be.calledOnce;
+        expect(axios).to.be.calledWith({
+          method: 'get',
+          url: 'https://some.contrived.url/posts/1?include=author.roles',
         });
       });
   });

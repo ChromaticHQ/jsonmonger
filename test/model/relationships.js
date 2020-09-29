@@ -2,11 +2,11 @@ const chai = require('chai');
 const expect = chai.expect;
 const sinon = require('sinon');
 chai.use(require('sinon-chai'));
-const api = require('../fixtures/api');
+const api = require('jsonapilite')(`${__dirname}/../fixtures/data`);
 require('../fixtures/config')();
 
 describe('relationships', () => {
-  let axios, Image, Paragraph, Person, Post, post, raw_json; //, Role;
+  let axios, Image, Paragraph, Person, Post, post, raw_json, Role;
   before(() => {
     axios = sinon.spy(request => {
       return api(request).then(result => {
@@ -21,7 +21,7 @@ describe('relationships', () => {
     Paragraph = require('../fixtures/models/Paragraph')({ axios });
     Person = require('../fixtures/models/Person')({ axios });
     Post = require('../fixtures/models/Post')({ axios });
-    // Role = require('../fixtures/models/Role')({ axios });
+    Role = require('../fixtures/models/Role')({ axios });
 
     return api({ url: '/posts/1?include=author,body' }).then(data => {
       raw_json = JSON.parse(data);
@@ -37,12 +37,10 @@ describe('relationships', () => {
   it('should load relationships as models', () => {
     expect(post.author).to.be.instanceOf(Person);
 
-    // Nested relationships can be checked when the new test api and .fetch()
-    // support them.
-    // expect(post.author.roles).to.be.instanceOf(Array);
-    // post.author.roles.forEach(role => {
-    //   expect(role).to.be.instanceOf(Role);
-    // });
+    expect(post.author.roles).to.be.instanceOf(Array);
+    post.author.roles.forEach(role => {
+      expect(role).to.be.instanceOf(Role);
+    });
 
     expect(post.body).to.be.instanceOf(Array);
     post.body.forEach(block => {
@@ -51,9 +49,7 @@ describe('relationships', () => {
         expectedModel = Paragraph;
       } else if (block.type === 'image') {
         expectedModel = Image;
-        // Nested relationships can be checked when the new test api and
-        // .fetch() support them.
-        // expect(block.credit).to.be.instanceOf(Person);
+        expect(block.credit).to.be.instanceOf(Person);
       } else if (block.type === 'blockquote') {
         // We’re not defining a dedicated Blockquote model, so we expect it
         // to return the raw data.
@@ -66,11 +62,9 @@ describe('relationships', () => {
 
   it('should store a reference to the related record’s immediate parent in the tree', () => {
     expect(post.author.__parent).to.deep.equal(post);
-    // Nested relationships can be checked when the new test api and .fetch()
-    // support them.
-    // post.author.roles.forEach(role => {
-    //   expect(role.__parent).to.deep.equal(post.author);
-    // });
+    post.author.roles.forEach(role => {
+      expect(role.__parent).to.deep.equal(post.author);
+    });
   });
 
   it('should load raw related data when a model is not available', () => {

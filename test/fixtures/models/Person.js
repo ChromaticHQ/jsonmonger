@@ -1,6 +1,6 @@
 const Model = require('../../../').Model;
 
-module.exports = ({ axios } = {}) => new Model({
+module.exports = config => new Model({
   type: 'person',
   endpoint: '/people',
   fullName: 'attributes.name',
@@ -28,6 +28,4 @@ module.exports = ({ axios } = {}) => new Model({
   bio: 'attributes.biography',
   alias: 'attributes.path.alias',
   roles: 'relationships.roles',
-}, {
-  axios,
-});
+}, config);

@@ -2,7 +2,7 @@ const chai = require('chai');
 const expect = chai.expect;
 const sinon = require('sinon');
 chai.use(require('sinon-chai'));
-const api = require('../fixtures/api');
+const api = require('jsonapilite')(`${__dirname}/../fixtures/data`);
 require('../fixtures/config')();
 
 /* eslint-disable no-unused-vars */
@@ -38,9 +38,13 @@ describe('to_object() method', () => {
   it('should return an object', () => {
     expect(post.toObject()).to.be.instanceOf(Object);
     expect(post.toObject()).to.deep.equal({
+      id: '1',
+      type: 'post',
       title: 'Your run of the mill post.',
       subtitle: 'Or: That time I couldn’t decide between two titles.',
       author: {
+        id: '201',
+        type: 'person',
         fullName: 'Testy McTestface',
         firstName: 'Testy',
         lastName: 'McTestface',
@@ -50,17 +54,25 @@ describe('to_object() method', () => {
           {
             id: '401',
             type: 'role',
+            name: null,
+            url: null,
           },
         ],
       },
       body: [
         {
+          id: '101',
+          type: 'paragraph',
           text: 'Et id animi optio voluptatem sunt voluptas dolorem. Et neque quasi aliquid quia soluta enim quia deserunt. Eum fugit est non accusamus ut nisi recusandae veniam. Quia vero excepturi minima. Et reiciendis voluptas error vel rerum omnis ipsum quia.',
         },
         {
+          id: '102',
+          type: 'image',
           url: '/path/to/image.jpg',
           alt: 'You do provide ALT values, right?',
           credit: {
+            id: '202',
+            type: 'person',
             fullName: null,
             firstName: null,
             lastName: null,
@@ -80,11 +92,13 @@ describe('to_object() method', () => {
           },
         },
         {
+          id: '103',
+          type: 'paragraph',
           text: 'Quia sed repellat id cum. Aperiam reprehenderit amet minima ut dolorem non nostrum placeat. Culpa esse id dolorum ducimus. Est quae nemo et rerum sapiente nam inventore.',
         },
         {
-          type: 'blockquote',
           id: '104',
+          type: 'blockquote',
           attributes: {
             text: 'It matters not how strait the gate, how charged with punishments the scroll, I am the master of my fate, I am the captain of my soul.',
             source: {
